@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Card from 'react-bootstrap/Card';
 import SplitButton from 'react-bootstrap/SplitButton';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -25,7 +25,7 @@ function Task(props) {
         setEditTaskPopupHook(false);
     }
     return (
-        <div>{editTaskPopupHook ? <EditTaskPopup flag={true} editTaskPopupOff={editTaskPopupOff} editTask={editTask} task={props.task} currentRootIndex={props.currentRootIndex} /> : null}
+        <div>{editTaskPopupHook ? <EditTaskPopup flag={editTaskPopupHook} editTaskPopupOff={editTaskPopupOff} editTask={editTask} task={props.task} currentRootIndex={props.currentRootIndex} /> : null}
             <div>
                 <Card style={{ textAlign: "justify", marginBottom: "6px", background: "#F3F1F2" }}>
                     <Card.Body>

@@ -20,7 +20,7 @@ function EditTaskPopup(props) {
     useEffect(() => {
         setPopupEditTaskHook(props.flag)
         setPrevTaskDetails(props.task)
-    }, [props.flag, props.task])
+    }, [props.flag])
 
     //this function create the object of task contains taskStatus,priority to update 
     //this two below function just used to show the menu selected name on button 
@@ -50,6 +50,7 @@ function EditTaskPopup(props) {
             props.editTask(popupUpdateTaskHookObj)
         }, 100)
         setPopupEditTaskHook(false);
+
     }
 
     const popupCloseAddTask = () => {
