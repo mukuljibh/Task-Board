@@ -7,7 +7,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 
-function AddTask(props) {
+function AddTaskPopup(props) {
 
     const [popupAddTaskHook, setpopupAddTaskHook] = useState(false);
     const [popupAddTaskHookObj, setPopupAddTaskHookObj] = useState({ title: "", discription: "", team: "", assignees: "", priority: "" })
@@ -125,4 +125,4 @@ function AddTask(props) {
     )
 
 }
-export default AddTask;
+export default AddTaskPopup;

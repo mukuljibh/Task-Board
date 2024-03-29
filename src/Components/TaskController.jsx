@@ -7,11 +7,11 @@ function TaskController(props) {
     useEffect(() => {
         setTasksArray(props.tasksArray)
     }, [props.tasksArray])
-
-    function handle() {
-        console.log(props.tasksArray)
+    //passing the updated object from task cotroller finally to app object contains status,rootindex,currentrootIndex(main states index)priority
+    function editTask(popupEditTaskHookObj, currentIndex) {
+        props.mainEditTask(popupEditTaskHookObj, currentIndex)
     }
-    //called by task along passing index of note to deleted as well as root index
+    //called by task along passing index of note to deleted as well as root index sendin it to app
     function deletetasksArray(deletetasksArrayIndex) {
         tasksArray.splice(deletetasksArrayIndex, 1)
         props.mainDeleteTask(tasksArray, props.rootIndex);
@@ -21,7 +21,7 @@ function TaskController(props) {
         <div>
             {
                 tasksArray.map((task, index) => (
-                    <Task key={index} index={index} task={task} deletetasksArray={deletetasksArray} />
+                    <Task key={index} index={index} task={task} deletetasksArray={deletetasksArray} editTask={editTask} currentRootIndex={props.rootIndex} />
                 ))
             }
 

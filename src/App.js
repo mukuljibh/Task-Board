@@ -1,7 +1,9 @@
 import Card from 'react-bootstrap/Card';
 import react, { useState } from 'react';
-import TaskController from "./Components/TaskController"
-import AddTask from './Components/AddTask';
+import TaskController from "./Components/TaskController";
+import AddTaskPopup from "./Components/AddTaskPopup";
+import { CurrencyRuble } from '@mui/icons-material';
+
 
 function App() {
   const arr = ["Pending", "in Progress", "Completed", "Deployed", "Deferred"];
@@ -25,7 +27,7 @@ function App() {
     let pendingStateIndex = 0;
     setTaskStates((prev) => {
       prev[pendingStateIndex].push(popupAddTaskHookObj);
-      return prev
+      return [...prev]
     })
 
   }
@@ -34,12 +36,21 @@ function App() {
     taskStates[rootIndex] = tasksArray
     setTaskStates([...taskStates])
   }
+  function mainEditTask(popupEditTaskHookObj, currentIndex) {
+    setTaskStates((prev) => {
+      //splice return array
+      const obj = prev[popupEditTaskHookObj.currentRootIndex].splice(currentIndex, 1)
+      const updatedTaskObj = { ...obj[0], priority: popupEditTaskHookObj.priority, status: popupEditTaskHookObj.status }
+      prev[popupEditTaskHookObj.rootIndex].push(updatedTaskObj);
+      return [...prev]
+    });
+  }
 
 
   return (
     /*parent  div starts*/
     <div>
-      {addTaskPopupHook ? <AddTask flag={true} addTaskPopupOff={addTaskPopupOff} mainAddTask={mainAddTask} /> : null}
+      {addTaskPopupHook ? <AddTaskPopup flag={true} addTaskPopupOff={addTaskPopupOff} mainAddTask={mainAddTask} /> : null}
 
       <div className="container-fluid border border-secondary  parrent" style={{ height: "100vh" }}>
         <div className="row ">
@@ -87,7 +98,7 @@ function App() {
                   <Card.Body >
                     {/*for making dv scrollable  it is actually linked with actual height of the card component*/}
                     <div style={{ maxHeight: "400px", overflow: 'auto' }}>
-                      <TaskController key={idx} rootIndex={idx} tasksArray={tasksArray} mainDeleteTask={mainDeleteTask} />
+                      <TaskController key={idx} rootIndex={idx} tasksArray={tasksArray} mainDeleteTask={mainDeleteTask} mainEditTask={mainEditTask} />
                     </div>
                   </Card.Body>
                 </Card>
