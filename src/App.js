@@ -6,7 +6,7 @@ import { CurrencyRuble } from '@mui/icons-material';
 
 
 function App() {
-  const arr = ["Pending", "in Progress", "Completed", "Deployed", "Deferred"];
+  const arr = ["Pending", "In Progress", "Completed", "Deployed", "Deferred"];
   const headerColors = ['bg-secondary', 'bg-warning', 'bg-success', 'bg-info', 'bg-danger'];
   const boarderColors = ['secondary', 'warning', 'success', 'info', 'danger'];
   const [addTaskPopupHook, setaddTaskPopupHook] = useState(false)
@@ -37,6 +37,7 @@ function App() {
     setTaskStates([...taskStates])
   }
   function mainEditTask(popupEditTaskHookObj, currentIndex) {
+
     setTaskStates((prev) => {
       //splice return array
       const obj = prev[popupEditTaskHookObj.currentRootIndex].splice(currentIndex, 1)
@@ -44,6 +45,8 @@ function App() {
       prev[popupEditTaskHookObj.rootIndex].push(updatedTaskObj);
       return [...prev]
     });
+
+
   }
 
 

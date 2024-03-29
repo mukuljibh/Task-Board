@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import { EventNote } from '@material-ui/icons';
+
 
 
 function EditTaskPopup(props) {
@@ -18,13 +18,19 @@ function EditTaskPopup(props) {
     const [statusButtonText, setStatusButtonText] = useState(false);
     //Recieve flag from app.js incdicate that button is clicked useeffect will take care of
     useEffect(() => {
+        console.log(props.flag)
         setPopupEditTaskHook(props.flag)
-        setPrevTaskDetails(props.task)
     }, [props.flag])
+
+    useEffect(() => {
+        setPrevTaskDetails(props.task)
+
+    }, [props.task])
+
 
     //this function create the object of task contains taskStatus,priority to update 
     //this two below function just used to show the menu selected name on button 
-    function priorityButtonTexShow(event) {
+    function priorityButtonTextShow(event) {
         setpopupUpdateTaskHookObj((prev) => {
             return {
                 ...prev, priority: event
@@ -45,29 +51,17 @@ function EditTaskPopup(props) {
     }
     //this function sends the updated Task object to task component
     function sendUpdatedObj() {
-        //loading animtion remains in there.
-        setTimeout(() => {
-            props.editTask(popupUpdateTaskHookObj)
-        }, 100)
-        setPopupEditTaskHook(false);
-
+        props.editTask(popupUpdateTaskHookObj)
+        setPopupEditTaskHook(false)
     }
 
-    const popupCloseAddTask = () => {
-
+    function popupCloseEditTask() {
         setPopupEditTaskHook(false);
-        //this is reverse calling of  addTaskPopupOff in app.js so that addTaskPopupHook(app.js) should be (false) which helps in  addTaskPopupHook(app.js)
-        //should be set as again true when button is clicked  and through conditional render in app.js again call the add task component 
-        //and use effect works as expected in AddTask component
-        //intoducing delay so that closing animation of addtask  popup should remains good as before
-        setTimeout(() => {
-            props.editTaskPopupOff(false);
-        }, 100)
 
     };
 
     return (
-        <Modal dialogClassName="addTask" show={popupEditTaskHook} onHide={popupCloseAddTask}>
+        <Modal dialogClassName="addTask" show={popupEditTaskHook} onHide={popupEditTaskHook}>
 
             <Modal.Header closeButton>
                 <Modal.Title>Edit TASK</Modal.Title>
@@ -126,7 +120,7 @@ function EditTaskPopup(props) {
                         <div className='col-xxl-4 ' >
                             <DropdownButton
                                 as={ButtonGroup}
-                                onSelect={priorityButtonTexShow}
+                                onSelect={priorityButtonTextShow}
                                 variant="secondary"
                                 title={priorityButtonText ? priorityButtonText : PrevTaskDetails.priority}
                                 size="sm"
@@ -152,18 +146,18 @@ function EditTaskPopup(props) {
 
                                 }}
                             >
-                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 0, status: "pending", currentRootIndex: props.currentRootIndex })} >pending</Dropdown.Item>
-                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 1, status: "inProgress", currentRootIndex: props.currentRootIndex })} >inProgress </Dropdown.Item>
-                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 2, status: "complete", currentRootIndex: props.currentRootIndex })}>complete</Dropdown.Item>
-                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 3, status: "deployed", currentRootIndex: props.currentRootIndex })}>deployed</Dropdown.Item>
-                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 4, status: "deferred", currentRootIndex: props.currentRootIndex })}>deferred</Dropdown.Item>
+                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 0, status: "Assign", currentRootIndex: props.currentRootIndex })} >pending</Dropdown.Item>
+                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 1, status: "In Progress", currentRootIndex: props.currentRootIndex })} >inProgress </Dropdown.Item>
+                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 2, status: "Completed", currentRootIndex: props.currentRootIndex })}>complete</Dropdown.Item>
+                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 3, status: "Deployed", currentRootIndex: props.currentRootIndex })}>deployed</Dropdown.Item>
+                                <Dropdown.Item eventKey={JSON.stringify({ rootIndex: 4, status: "Deferred", currentRootIndex: props.currentRootIndex })}>deferred</Dropdown.Item>
                             </DropdownButton>
                         </div>
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={popupCloseAddTask}>
+                <Button variant="secondary" onClick={popupCloseEditTask}>
                     Close
                 </Button>
                 <Button variant="primary" onClick={sendUpdatedObj}>
