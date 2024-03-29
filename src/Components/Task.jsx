@@ -17,14 +17,16 @@ function Task(props) {
     //this function receives the updated unit Task object  from EditTaskPopup component object have rootIndex status and priority
     //sending the obect to the task controller
     function editTask(popupEditTaskHookObj) {
-        //delay so that instant mapping is avoided this is done because modal clossing animation disappear
+        //delay so that instant mapping is avoided this need to done because modal clossing animation disappear which look not good
         setTimeout(() => {
             props.editTask(popupEditTaskHookObj, props.index);
         }, 500)
 
     }
     function editTaskPopupOn() {
-        //this is done so that rendering problem arives when task are updated should be solve need to have a gap between switvhesx
+        //this need to be done due to rendering problem arives when states are immediatly changes need to have gap(changes) between them so that 
+        //conditional rendering wake up
+
         setTimeout(() => {
             setEditTaskPopupHook(false);
         }, 50)
@@ -34,11 +36,9 @@ function Task(props) {
         }, 100)
 
     }
-    function editTaskPopupOff() {
-        setEditTaskPopupHook(false);
-    }
+
     return (
-        <div>{editTaskPopupHook ? <EditTaskPopup flag={editTaskPopupHook} editTaskPopupOff={editTaskPopupOff} editTaskPopupOn={editTaskPopupOn} editTask={editTask} task={props.task} currentRootIndex={props.currentRootIndex} /> : null}
+        <div>{editTaskPopupHook ? <EditTaskPopup flag={editTaskPopupHook} editTask={editTask} task={props.task} currentRootIndex={props.currentRootIndex} /> : null}
             <div>
                 <Card style={{ textAlign: "justify", marginBottom: "6px", background: "#F3F1F2" }}>
                     <Card.Body>

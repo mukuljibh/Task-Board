@@ -27,22 +27,14 @@ function AddTaskPopup(props) {
         }));
     }
 
-    function showObj() {
+    function sendObj() {
         //  console.log(popupAddTaskHookObj)
         props.mainAddTask(popupAddTaskHookObj)
-
+        setpopupAddTaskHook(false);
     }
 
     const popupCloseAddTask = () => {
         setpopupAddTaskHook(false);
-        //this is reverse calling of  addTaskPopupOff in app.js so that addTaskPopupHook(app.js) should be (false) which helps in  addTaskPopupHook(app.js)
-        //should be set as again true when button is clicked  and through conditional render in app.js again call the add task component 
-        //and use effect works as expected in AddTask component
-        //intoducing delay so that closing animation of addtask  popup should remains good as before
-        setTimeout(() => {
-            props.addTaskPopupOff(false);
-        }, 100)
-
     };
     return (
         <Modal dialogClassName="addTask" show={popupAddTaskHook} onHide={popupCloseAddTask}>
@@ -117,7 +109,7 @@ function AddTaskPopup(props) {
                 <Button variant="secondary" onClick={popupCloseAddTask}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={showObj}>
+                <Button variant="primary" onClick={sendObj}>
                     Save Changes
                 </Button>
             </Modal.Footer>

@@ -15,11 +15,18 @@ function App() {
 
   //link with addtask popup component;
   function addTaskPopupOn() {
-    setaddTaskPopupHook(true);
-  }
-  function addTaskPopupOff() {
+    //this need to be done due to rendering problem arives when states are immediatly changes need to have gap(changes) between them so that 
+    //conditional rendering wake up
 
-    setaddTaskPopupHook(false);
+    setTimeout(() => {
+      setaddTaskPopupHook(false);
+    }, 50)
+
+    setTimeout(() => {
+      setaddTaskPopupHook(true);
+    }, 100)
+
+
   }
 
   function mainAddTask(popupAddTaskHookObj) {
@@ -53,7 +60,7 @@ function App() {
   return (
     /*parent  div starts*/
     <div>
-      {addTaskPopupHook ? <AddTaskPopup flag={true} addTaskPopupOff={addTaskPopupOff} mainAddTask={mainAddTask} /> : null}
+      {addTaskPopupHook ? <AddTaskPopup flag={true} mainAddTask={mainAddTask} /> : null}
 
       <div className="container-fluid border border-secondary  parrent" style={{ height: "100vh" }}>
         <div className="row ">
