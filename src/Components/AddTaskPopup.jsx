@@ -31,10 +31,12 @@ function AddTaskPopup(props) {
         //  console.log(popupAddTaskHookObj)
         props.mainAddTask(popupAddTaskHookObj)
         setpopupAddTaskHook(false);
+        props.addTaskPopupOff()
     }
 
-    const popupCloseAddTask = () => {
+    function popupCloseAddTask() {
         setpopupAddTaskHook(false);
+        props.addTaskPopupOff()
     };
     return (
         <Modal dialogClassName="addTask" show={popupAddTaskHook} onHide={popupCloseAddTask}>

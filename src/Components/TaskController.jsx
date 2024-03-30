@@ -8,8 +8,8 @@ function TaskController(props) {
         setTasksArray(props.tasksArray)
     }, [props.tasksArray])
     //passing the updated object from task cotroller finally to app object contains status,rootindex,currentrootIndex(main states index)priority
-    function editTask(popupEditTaskHookObj, currentIndex) {
-        props.mainEditTask(popupEditTaskHookObj, currentIndex)
+    function editTask(popupUpdateTaskHookObj, currentIndex) {
+        props.mainEditTask(popupUpdateTaskHookObj, currentIndex)
     }
     //called by task along passing index of note to deleted as well as root index sendin it to app
     function deletetasksArray(deletetasksArrayIndex) {

@@ -53,10 +53,13 @@ function EditTaskPopup(props) {
     function sendUpdatedObj() {
         props.editTask(popupUpdateTaskHookObj)
         setPopupEditTaskHook(false)
+        //this is the Task component function for off this component
+        props.editTaskPopupOff()
     }
 
     function popupCloseEditTask() {
         setPopupEditTaskHook(false);
+        props.editTaskPopupOff()
 
     };
 
