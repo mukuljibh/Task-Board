@@ -11,7 +11,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 function EditTaskPopup(props) {
 
     const [popupEditTaskHook, setPopupEditTaskHook] = useState(false);
-    const [popupUpdateTaskHookObj, setpopupUpdateTaskHookObj] = useState({ rootIndex: "", currentRootIndex: "", priority: "", status: "" })
+    const [popUpUpdateTaskHookObj, setPopUpUpdateTaskHookObj] = useState({ rootIndex: "", currentRootIndex: "", priority: "", status: "" })
     //this hook is used render the already present data inside the boxes of edit task popup 
     const [PrevTaskDetails, setPrevTaskDetails] = useState({});
     const [priorityButtonText, setpriorityButtonText] = useState(false);
@@ -31,7 +31,7 @@ function EditTaskPopup(props) {
     //this function create the object of task contains taskStatus,priority to update 
     //this two below function just used to show the menu selected name on button 
     function priorityButtonTextShow(event) {
-        setpopupUpdateTaskHookObj((prev) => {
+        setPopUpUpdateTaskHookObj((prev) => {
             return {
                 ...prev, priority: event
             }
@@ -41,7 +41,7 @@ function EditTaskPopup(props) {
     function StatusButtonTextShow(event) {
 
         const obj = JSON.parse(event);
-        setpopupUpdateTaskHookObj((prev) => {
+        setPopUpUpdateTaskHookObj((prev) => {
             return {
                 ...prev, ...obj
             }
@@ -51,7 +51,8 @@ function EditTaskPopup(props) {
     }
     //this function sends the updated Task object to task component
     function sendUpdatedObj() {
-        props.editTask(popupUpdateTaskHookObj)
+
+        props.editTask(popUpUpdateTaskHookObj)
         setPopupEditTaskHook(false)
         //this is the Task component function for off this component
         props.editTaskPopupOff()

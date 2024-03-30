@@ -28,12 +28,18 @@ font-size: large;
   margin-bottom: 25px;
   
 }
-
+.errorinputbox{
+  border: 2px solid red !important; 
+}
+.successinputbox{
+  border: 2px solid green !important; 
+}
 .TaskBoard{
   position: relative;
   top:20px;
   left:120px;
 }
+
 
 .flexTaskController{
   display: flex;

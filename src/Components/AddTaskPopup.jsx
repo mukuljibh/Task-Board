@@ -18,6 +18,7 @@ function AddTaskPopup(props) {
 
     //this function create the object of task 
     function taskobj(event) {
+        //event.target also have event key value of drop down button
         const { id, value } = event.target || event;
         const type = id || 'priority';
 

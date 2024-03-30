@@ -14,7 +14,10 @@ function App() {
   const headerColors = ['bg-secondary', 'bg-warning', 'bg-success', 'bg-info', 'bg-danger'];
   const boarderColors = ['secondary', 'warning', 'success', 'info', 'danger'];
   const [addTaskPopupHook, setaddTaskPopupHook] = useState(false)
-
+  const [filterButtonToggleHook, setFilterButtonToggleHook] = useState(true);
+  const [inputErrorHook, setInputErrorHook] = useState({ assignees: null, priority: null });
+  const [mainFilterTaskHandlerHook, setMainFilterTaskHandlerHook] = useState({ assignees: "", priority: "" });
+  const [currentTaskStates, setCurrentTaskStates] = useState([[], [], [], [], []]);
   const [taskStates, setTaskStates] = useState([[], [], [], [], []]);
 
   //link with addtask popup component;
@@ -39,11 +42,54 @@ function App() {
       return [...prev]
     })
   }
+  //helper function to mainFilterTask
+  function mainFilterTaskHandler(value, type) {
+    //this rendring makesures that filter button is in operable if assignee name and priority is not entered it block the functioning of mainFilterTask
+    //mainFilterTask links with setFilterButtonToggleHook 
+    type === "assignees" && value.target.value.trim().length === 0 ? setInputErrorHook((prev) => { setFilterButtonToggleHook(false); return { ...prev, assignee: true, priority: true } }) :
+      setInputErrorHook((prev) => { setFilterButtonToggleHook(true); return { ...prev, assignees: false, priority: false } })
+
+    const val = type === "assignees" ? value.target.value : value;
+    setMainFilterTaskHandlerHook((prev) => {
+      return { ...prev, [type]: val }
+    })
+  }
+  function mainResetFilterTask() {
+    setTaskStates([...currentTaskStates])
+  }
+  function mainSaveStateTask() {
+    setCurrentTaskStates([...taskStates]);
+  }
+  function mainFilterTask() {
+    //object contain criteria on whick filteration of task perfrom
+    let filterObj = mainFilterTaskHandlerHook;
+    //avoiding direct using of hook main state
+    let state = [...taskStates]
+    let arr1 = state.map((val) => {
+      //this way it handle if one of assigny or priorty key  value missing and if both value are missing then this function will not exceute it is 
+      //handled above in helper function mainFilterTaskHandler
+      return val.filter((vali) => {
+        const assigneeCheck = !filterObj.assignees || filterObj.assignees === vali.assignees;
+        console.log("valii", vali)
+        console.log("filterobj", filterObj)
+        const priorityCheck = !filterObj.priority || filterObj.priority === vali.priority;
+        console.log("valii", vali)
+        console.log("valii", filterObj)
+
+        return assigneeCheck && priorityCheck
+      })
+    })
+
+    setTaskStates([...arr1])
+  }
+
 
   //final main delete call by task controller
-  function mainDeleteTask(tasksArray, rootIndex) {
-    taskStates[rootIndex] = tasksArray//contains the array of states after deleting the task from it
-    setTaskStates([...taskStates])
+  function mainDeleteTask(updatedTasksArrayHook, rootIndex) {
+    taskStates[rootIndex] = updatedTasksArrayHook//contains the array of states after deleting the task from it
+    setTaskStates((prev) => {
+      return [...prev]
+    })
   }
 
   function mainEditTask(popupEditTaskHookObj, currentIndex) {
@@ -57,6 +103,16 @@ function App() {
         return [...prev]
       });
     }, 200)
+  }
+  function mainSortTask(event) {
+    //shallow copy of state hook
+    let state = [...taskStates];
+    let c = state.map((val) => {
+      return val.sort((a, b) => {
+        return a.priority.localeCompare(b.priority)
+      })
+    })
+    setTaskStates([...state])
 
   }
   //<div className="col-sm-7 col-7 TaskBoard ">
@@ -78,11 +134,14 @@ function App() {
               <h4 >Filter By:</h4>
             </div >
             <div className="col-xxl-1 col-sm-2 col " style={{ marginRight: "5%" }} >
-              <Form.Control style={{ width: "120px", height: "30px", fontSize: "15px" }} size="sm" type="text" placeholder="Assignee Name" />
+              {/* borderColor: "red", borderWidth: "2px"*/}
+              <Form.Control className={inputErrorHook.assignees === true ? "errorinputbox" : null} onChange={(event) => mainFilterTaskHandler(event, "assignees")} style={{ width: "120px", height: "30px", fontSize: "15px" }} size="sm" type="text" placeholder="Assignee Name" />
             </div>
             <div className="col-xxl-1 col-sm-2 col-" >
               <DropdownButton
+                className={inputErrorHook.priority === true ? "errorinputbox" : null}
                 as={ButtonGroup}
+
                 drop="down-centered'"
                 variant="light"
                 title="Priority"
@@ -92,19 +151,22 @@ function App() {
                 }}
               >
                 <div style={{ fontSize: "14px" }}>
-                  <Dropdown.Item as="button">P0</Dropdown.Item>
-                  <Dropdown.Item as="button">P1</Dropdown.Item>
-                  <Dropdown.Item as="button">P2</Dropdown.Item>
+                  <Dropdown.Item onClick={() => mainFilterTaskHandler("P0", "priority")} eventKey={"P0"}>P0</Dropdown.Item>
+                  <Dropdown.Item onClick={() => mainFilterTaskHandler("P1", "priority")} eventKey={"P1"} >P1 </Dropdown.Item>
+                  <Dropdown.Item onClick={() => mainFilterTaskHandler("P2", "priority")} eventKey={"P2"}>P2</Dropdown.Item>
                 </div>
               </DropdownButton>
             </div>
             <div className="col-xxl-3 col-sm-2 col d-flex justify-content-center " >
-              <Button style={{ height: "30px", width: "60px" }} variant="dark" size="sm">
+              <Button onClick={filterButtonToggleHook ? mainFilterTask : null} style={{ height: "30px", width: "60px" }} variant="dark" size="sm">
                 Filter
               </Button>
 
-              <Button style={{ height: "30px", width: "60px", marginLeft: "2%" }} variant="danger" size="sm">
+              <Button onClick={mainResetFilterTask} style={{ height: "30px", width: "60px", marginLeft: "2%" }} variant="danger" size="sm">
                 reset
+              </Button>
+              <Button onClick={mainSaveStateTask} style={{ height: "30px", width: "60px", marginLeft: "2%" }} variant="success" size="sm">
+                Save
               </Button>
             </div>
 
@@ -124,9 +186,10 @@ function App() {
             <div className="col-xxl col-sm-9 ">
               <DropdownButton
                 as={ButtonGroup}
+                onSelect={mainSortTask}
                 drop="down-centered'"
                 variant="light"
-                title="Priority"
+                title="Criteria"
                 size="sm"
                 style={{
                   width: "120px",
@@ -134,9 +197,8 @@ function App() {
                 }}
               >
                 <div style={{ fontSize: "14px" }}>
-                  <Dropdown.Item as="button">P0</Dropdown.Item>
-                  <Dropdown.Item as="button">P1</Dropdown.Item>
-                  <Dropdown.Item as="button">P2</Dropdown.Item>
+                  <Dropdown.Item eventKey={"P0"}>Priority</Dropdown.Item>
+
                 </div>
               </DropdownButton>
             </div>

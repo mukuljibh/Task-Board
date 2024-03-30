@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Task from './Task';
 
 function TaskController(props) {
-    const [tasksArray, setTasksArray] = useState([]);
+    const [tasksArrayHook, setTasksArrayHook] = useState([]);
 
     useEffect(() => {
-        setTasksArray(props.tasksArray)
+        setTasksArrayHook(props.tasksArray)
     }, [props.tasksArray])
     //passing the updated object from task cotroller finally to app object contains status,rootindex,currentrootIndex(main states index)priority
     function editTask(popupUpdateTaskHookObj, currentIndex) {
@@ -13,14 +13,16 @@ function TaskController(props) {
     }
     //called by task along passing index of note to deleted as well as root index sendin it to app
     function deletetasksArray(deletetasksArrayIndex) {
-        tasksArray.splice(deletetasksArrayIndex, 1)
-        props.mainDeleteTask(tasksArray, props.rootIndex);
+        //updating direct hook lead to problems so shallow compy is created
+        const updatedTasksArray = [...tasksArrayHook];
+        updatedTasksArray.splice(deletetasksArrayIndex, 1);
+        props.mainDeleteTask(updatedTasksArray, props.rootIndex);
     }
 
     return (
         <div>
             {
-                tasksArray.map((task, index) => (
+                tasksArrayHook.map((task, index) => (
                     <Task key={index} index={index} task={task} deletetasksArray={deletetasksArray} editTask={editTask} currentRootIndex={props.rootIndex} />
                 ))
             }
