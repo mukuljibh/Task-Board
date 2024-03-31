@@ -57,7 +57,7 @@ function AddTaskPopup(props) {
     return (
         <div>
 
-            <Modal dialogClassName="addTask" show={popupAddTaskHook} onHide={popupCloseAddTask}>
+            <Modal centered dialogClassName="addTask" show={popupAddTaskHook} onHide={popupCloseAddTask}>
                 <Modal.Header closeButton>
                     <Modal.Title>CREATE A TASK</Modal.Title>
                 </Modal.Header>
@@ -67,7 +67,7 @@ function AddTaskPopup(props) {
                             <Form.Label>Title</Form.Label>
                             <Form.Control
                                 id="title"
-                                placeholder="name@example.com"
+                                placeholder="Title of the task"
                                 autoFocus
                                 onChange={taskobj}
                                 style={{ height: '40px', width: "70%", marginLeft: "60px" }}
@@ -80,7 +80,8 @@ function AddTaskPopup(props) {
                             <Form.Label>Description</Form.Label>
                             <Form.Control as="textarea" rows={4}
                                 id="description"
-
+                                autoFocus
+                                placeholder="Content..."
                                 onChange={taskobj}
                                 style={{ height: "10% ", width: "70%", marginLeft: "10px", overflow: "auto" }} />
                         </Form.Group>
@@ -88,7 +89,7 @@ function AddTaskPopup(props) {
                             <Form.Label>Team</Form.Label>
                             <Form.Control
                                 id="team"
-                                placeholder="name@example.com"
+                                placeholder="team"
                                 onChange={taskobj}
                                 autoFocus
                                 style={{ height: '40px', width: "70%", marginLeft: "53px" }}
@@ -98,7 +99,7 @@ function AddTaskPopup(props) {
                             <Form.Label>Assignees</Form.Label>
                             <Form.Control
                                 id="assignees"
-                                placeholder="name@example.com"
+                                placeholder="Assignee name"
                                 onChange={taskobj}
                                 autoFocus
                                 style={{ height: '40px', width: "70%", marginLeft: "20px" }}

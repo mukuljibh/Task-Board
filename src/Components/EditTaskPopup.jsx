@@ -66,12 +66,12 @@ function EditTaskPopup(props) {
     };
 
     return (
-        <Modal dialogClassName="addTask" show={popupEditTaskHook} onHide={popupCloseEditTask}>
+        <Modal centered aria-labelledby="contained-modal-title-vcenter" dialogClassName="addTask" show={popupEditTaskHook} onHide={popupCloseEditTask}>
 
             <Modal.Header closeButton>
-                <Modal.Title>Edit TASK</Modal.Title>
+                <Modal.Title id="contained-modal-title-vcenter">Edit TASK</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body id="contained-modal-title-vcenter">
                 <Form>
                     <Form.Group className="mb-3  d-flex align-items-center ">
                         <Form.Label>Title</Form.Label>
@@ -93,7 +93,7 @@ function EditTaskPopup(props) {
                             id="description"
                             readOnly
                             value={PrevTaskDetails.description || "Status"}
-
+                            autoFocus
                             style={{ height: "10% ", width: "70%", marginLeft: "10px", overflow: "auto" }} />
                     </Form.Group>
                     <Form.Group className="mb-3  d-flex align-items-center" >
@@ -112,20 +112,19 @@ function EditTaskPopup(props) {
                             id="assignees"
                             value={PrevTaskDetails.assignees}
                             readOnly
-
                             autoFocus
                             style={{ height: '40px', width: "70%", marginLeft: "20px" }}
                         />
                     </Form.Group>
                     <Form.Group className="me-3 row" >
-                        <div className='col-xxl-2'>
+                        <div className='col-xxl-2 col-2'>
                             <Form.Label  >Priority</Form.Label>
                         </div>
-                        <div className='col-xxl-4 ' >
+                        <div className='col-xxl-4 col-2  ' >
                             <DropdownButton
                                 as={ButtonGroup}
                                 onSelect={priorityButtonTextShow}
-
+                                autoFocus
                                 variant="secondary"
                                 title={priorityButtonText ? priorityButtonText : PrevTaskDetails.priority}
                                 size="sm"
@@ -143,6 +142,7 @@ function EditTaskPopup(props) {
                             <DropdownButton
                                 as={ButtonGroup}
                                 onSelect={StatusButtonTextShow}
+                                autoFocus
                                 variant="secondary"
                                 title={statusButtonText}
                                 size="sm"

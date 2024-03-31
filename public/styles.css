@@ -46,7 +46,8 @@ font-size: large;
   justify-content: space-between;
 }
 ::-webkit-scrollbar {
-  height: 8px; 
+  width: 4px; 
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {

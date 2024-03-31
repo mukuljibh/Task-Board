@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Skeleton from '@mui/material/Skeleton';
 import Snackbar from '@mui/material/Snackbar';
-import styles from "./Components/styles.css"
+
 function App() {
   const temp = [
     [
@@ -254,7 +254,7 @@ function App() {
             </div >
             <div className="col-xxl-1 col-md-2  col-sm-3 col-4 " style={{ marginRight: "5%" }} >
               {/* borderColor: "red", borderWidth: "2px"*/}
-              <Form.Control onChange={(event) => mainFilterTaskHandler(event, "assignees")} style={{ width: "120px", height: "30px", fontSize: "15px" }} className={styles.btninp} size="sm" type="text" placeholder="Assignee Name" />
+              <Form.Control onChange={(event) => mainFilterTaskHandler(event, "assignees")} style={{ width: "120px", height: "30px", fontSize: "15px" }} size="sm" type="text" placeholder="Assignee Name" />
             </div>
             <div className="col-xxl-1 col-md col-sm-6 col-1 " >
               <DropdownButton
