@@ -18,7 +18,6 @@ function EditTaskPopup(props) {
     const [statusButtonText, setStatusButtonText] = useState(false);
     //Recieve flag from app.js incdicate that button is clicked useeffect will take care of
     useEffect(() => {
-        console.log(props.flag)
         setPopupEditTaskHook(props.flag)
     }, [props.flag])
 
@@ -51,8 +50,10 @@ function EditTaskPopup(props) {
     }
     //this function sends the updated Task object to task component
     function sendUpdatedObj() {
-
-        props.editTask(popUpUpdateTaskHookObj)
+        const message = "Updated"
+        //creating shallow copy
+        const ShCpypopUpUpdateTaskHookObj = { ...popUpUpdateTaskHookObj }
+        props.editTask(ShCpypopUpUpdateTaskHookObj, message)
         setPopupEditTaskHook(false)
         //this is the Task component function for off this component
         props.editTaskPopupOff()
@@ -65,7 +66,7 @@ function EditTaskPopup(props) {
     };
 
     return (
-        <Modal dialogClassName="addTask" show={popupEditTaskHook} onHide={popupEditTaskHook}>
+        <Modal dialogClassName="addTask" show={popupEditTaskHook} onHide={popupCloseEditTask}>
 
             <Modal.Header closeButton>
                 <Modal.Title>Edit TASK</Modal.Title>
@@ -89,9 +90,9 @@ function EditTaskPopup(props) {
                     >
                         <Form.Label>Description</Form.Label>
                         <Form.Control as="textarea" rows={4}
-                            id="discription"
+                            id="description"
                             readOnly
-                            value={PrevTaskDetails.discription || " "}
+                            value={PrevTaskDetails.description || "Status"}
 
                             style={{ height: "10% ", width: "70%", marginLeft: "10px", overflow: "auto" }} />
                     </Form.Group>
@@ -101,7 +102,6 @@ function EditTaskPopup(props) {
                             id="team"
                             value={PrevTaskDetails.team}
                             readOnly
-
                             autoFocus
                             style={{ height: '40px', width: "70%", marginLeft: "53px" }}
                         />
@@ -125,6 +125,7 @@ function EditTaskPopup(props) {
                             <DropdownButton
                                 as={ButtonGroup}
                                 onSelect={priorityButtonTextShow}
+
                                 variant="secondary"
                                 title={priorityButtonText ? priorityButtonText : PrevTaskDetails.priority}
                                 size="sm"
@@ -160,7 +161,9 @@ function EditTaskPopup(props) {
                     </Form.Group>
                 </Form>
             </Modal.Body>
+
             <Modal.Footer>
+
                 <Button variant="secondary" onClick={popupCloseEditTask}>
                     Close
                 </Button>

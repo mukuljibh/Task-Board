@@ -1,5 +1,5 @@
 import Card from 'react-bootstrap/Card';
-import react, { useState } from 'react';
+import { useState } from 'react';
 import TaskController from "./Components/TaskController";
 import AddTaskPopup from "./Components/AddTaskPopup";
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -7,19 +7,89 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-
-
+import Skeleton from '@mui/material/Skeleton';
+import Snackbar from '@mui/material/Snackbar';
+import styles from "./Components/styles.css"
 function App() {
+  const temp = [
+    [
+      {
+        "assignees": "dev4",
+        "description": "Developed RESTful APIs with Node.js and Express for a social media platform. Utilized NoSQL database for scalable data storage and retrieval. Implemented real-time messaging features using WebSockets. Designed and optimized backend infrastructure for high performance and scalability.",
+        "priority": "P0",
+        "status": "Assigned",
+        "team": "mukul",
+        "title": "Social Media API"
+      },
+      {
+        "assignees": "dev5",
+        "description": "Built a microservices architecture using Node.js and Express to handle various API functionalities. Utilized SQL database for transactional data and NoSQL database for real-time analytics. Implemented caching strategies for performance optimization and improved user experience.",
+        "priority": "P1",
+        "status": "Assigned",
+        "team": "mukul",
+        "title": "Microservices Architecture"
+      }
+    ],
+    [
+      {
+        "assignees": "dev3",
+        "description": "Designed and implemented a dashboard application using React and Redux for state management. Integrated backend APIs for data retrieval and manipulation. Implemented responsive UI components and data visualization for better user interaction.",
+        "priority": "P0",
+        "status": "In Progress",
+        "team": "mukul",
+        "title": "Dashboard Application"
+      }
+    ],
+    [
+      {
+        "assignees": "dev9",
+        "description": "Developed a note-taking web application using React and Express. Implemented features such as Note bookmarking, CRUD operations via RESTful API with MongoDB database integration. Utilized Axios for making asynchronous API calls from the frontend. Implemented user authentication and authorization mechanisms to ensure secure access to user-specific notes.",
+        "priority": "P1",
+        "status": "Completed",
+        "team": "mukul",
+        "title": "Note-Taking Web App"
+      },
+      {
+        "assignees": "dev2",
+        "description": "Developed a mini e-commerce application using WinForms and Visual Studio, and PostgreSQL. Implemented user authentication, user and farmer dashboards, order management, inventory tracking, and sales analytics for comprehensive business operations.",
+        "priority": "P2",
+        "status": "Completed",
+        "team": "mukul",
+        "title": "Mini E-commerce App"
+      }
+    ],
+    [
+      {
+        "assignees": "dev7",
+        "description": "Designed and implemented backend services using Express.js and PostgreSQL for managing user accounts and data processing. Integrated React components for user interfaces and state management with Redux. Implemented RESTful API endpoints for data retrieval and manipulation to ensure smooth application functionality.",
+        "priority": "P1",
+        "status": "Deployed",
+        "team": "mukul",
+        "title": "Backend Services Development"
+      }
+    ],
+    [
+      {
+        "assignees": "dev1",
+        "description": "Built RESTful APIs with Express.js and MongoDB for a blogging platform. Designed database schemas for user accounts and blog posts. Integrated React components for frontend views and Redux for state management. Ensured efficient data handling and seamless user experience.",
+        "priority": "P2",
+        "status": "Deferred",
+        "team": "mukul",
+        "title": "Blogging Platform APIs"
+      }
+    ]
+  ];
   const arr = ["Pending", "In Progress", "Completed", "Deployed", "Deferred"];
   const headerColors = ['bg-secondary', 'bg-warning', 'bg-success', 'bg-info', 'bg-danger'];
   const boarderColors = ['secondary', 'warning', 'success', 'info', 'danger'];
   const [addTaskPopupHook, setaddTaskPopupHook] = useState(false)
-  const [filterButtonToggleHook, setFilterButtonToggleHook] = useState(true);
+  const [filterButtonToggleHook, setFilterButtonToggleHook] = useState(false);
   const [inputErrorHook, setInputErrorHook] = useState({ assignees: null, priority: null });
   const [mainFilterTaskHandlerHook, setMainFilterTaskHandlerHook] = useState({ assignees: "", priority: "" });
   const [currentTaskStates, setCurrentTaskStates] = useState([[], [], [], [], []]);
   const [taskStates, setTaskStates] = useState([[], [], [], [], []]);
-
+  const [buttonHook, setButtonHook] = useState({ filter: "", sort: "" });
+  const [open, setOpen] = useState({ flag: false, message: "" });
   //link with addtask popup component;
   function addTaskPopupOn() {
     //this need to be done due to rendering problem arives when states are immediatly changes need to have gap(changes) between them so that 
@@ -34,16 +104,31 @@ function App() {
     }, 500)
 
   }
+  function load() {
+    messageOn("DataSet Loaded")
+    messageOff();
+    setTaskStates([...temp])
+  }
   //final main delete call by AddTaskPopup component
-  function mainAddTask(popupAddTaskHookObj) {
+  function mainAddTask(updatedPopupAddTaskHookObj, message) {
+    //alert the user success message is displayed through snackbar
+    messageOn(message)
+    messageOff()
     let pendingStateIndex = 0;
-    setTaskStates((prev) => {
-      prev[pendingStateIndex].push(popupAddTaskHookObj);
-      return [...prev]
-    })
+    //creating deep copy so that states does not cause any unexpected issue
+    const deepCopyTaskStates = JSON.parse(JSON.stringify(taskStates));
+    let updatedState = [...deepCopyTaskStates[0], updatedPopupAddTaskHookObj];
+    deepCopyTaskStates[0].push(updatedPopupAddTaskHookObj)
+    setTaskStates([...deepCopyTaskStates])
   }
   //helper function to mainFilterTask
   function mainFilterTaskHandler(value, type) {
+
+    //this is to handle the button of priority when click on button button value shown on button instead replacing the previous one
+    if (type === "priority") {
+      setButtonHook({ ...buttonHook, filter: value });
+    }
+
     //this rendring makesures that filter button is in operable if assignee name and priority is not entered it block the functioning of mainFilterTask
     //mainFilterTask links with setFilterButtonToggleHook 
     type === "assignees" && value.target.value.trim().length === 0 ? setInputErrorHook((prev) => { setFilterButtonToggleHook(false); return { ...prev, assignee: true, priority: true } }) :
@@ -55,96 +140,125 @@ function App() {
     })
   }
   function mainResetFilterTask() {
+    messageOn("Reset Successfull")
+    messageOff();
     setTaskStates([...currentTaskStates])
   }
   function mainSaveStateTask() {
+    messageOn("State Saved Successfull");
+    messageOff();
     setCurrentTaskStates([...taskStates]);
   }
   function mainFilterTask() {
+    messageOn("Filtered Successfull");
+    messageOff();
     //object contain criteria on whick filteration of task perfrom
     let filterObj = mainFilterTaskHandlerHook;
     //avoiding direct using of hook main state
     let state = [...taskStates]
-    let arr1 = state.map((val) => {
+    //deepcopy
+    const deepCopyTaskStates = JSON.parse(JSON.stringify(taskStates));
+    let updatedTaskState = deepCopyTaskStates.map((val) => {
       //this way it handle if one of assigny or priorty key  value missing and if both value are missing then this function will not exceute it is 
       //handled above in helper function mainFilterTaskHandler
       return val.filter((vali) => {
         const assigneeCheck = !filterObj.assignees || filterObj.assignees === vali.assignees;
-        console.log("valii", vali)
-        console.log("filterobj", filterObj)
         const priorityCheck = !filterObj.priority || filterObj.priority === vali.priority;
-        console.log("valii", vali)
-        console.log("valii", filterObj)
 
         return assigneeCheck && priorityCheck
       })
     })
 
-    setTaskStates([...arr1])
+    setTaskStates([...updatedTaskState])
   }
 
 
   //final main delete call by task controller
-  function mainDeleteTask(updatedTasksArrayHook, rootIndex) {
-    taskStates[rootIndex] = updatedTasksArrayHook//contains the array of states after deleting the task from it
-    setTaskStates((prev) => {
-      return [...prev]
-    })
-  }
+  function mainDeleteTask(ShcpyupdatedTasksArray, rootIndex, message) {
+    setTimeout(() => {
+      messageOn(message);
+      messageOff();
+      const deepCopyTaskStates = JSON.parse(JSON.stringify(taskStates));
+      deepCopyTaskStates[rootIndex] = ShcpyupdatedTasksArray//contains the array of states after deleting the task from it
+      setTaskStates(() => {
+        return [...deepCopyTaskStates]
+      })
+    }, 200)
 
-  function mainEditTask(popupEditTaskHookObj, currentIndex) {
+  }
+  function messageOff() {
+    setTimeout(() => {
+      setOpen({ ...open, flag: false, message: "" })
+    }, 2000)
+  }
+  function messageOn(message) {
+    setOpen({ ...open, flag: true, message: message })
+  }
+  function mainEditTask(ShCpypopUpUpdateTaskHookObj, currentIndex, message) {
+    messageOn(message);
+    messageOff();
     //introducing delay so that instant mapping is avoided beacuse it is causing problem in closing animation of dialogs.
     setTimeout(() => {
       setTaskStates((prev) => {
         //splice return array
-        const obj = prev[popupEditTaskHookObj.currentRootIndex].splice(currentIndex, 1)
-        const updatedTaskObj = { ...obj[0], priority: popupEditTaskHookObj.priority, status: popupEditTaskHookObj.status }
-        prev[popupEditTaskHookObj.rootIndex].push(updatedTaskObj);
+        const obj = prev[ShCpypopUpUpdateTaskHookObj.currentRootIndex].splice(currentIndex, 1)
+        const updatedTaskObj = { ...obj[0], priority: ShCpypopUpUpdateTaskHookObj.priority, status: ShCpypopUpUpdateTaskHookObj.status }
+        prev[ShCpypopUpUpdateTaskHookObj.rootIndex].push(updatedTaskObj);
         return [...prev]
       });
     }, 200)
   }
   function mainSortTask(event) {
-    //shallow copy of state hook
-    let state = [...taskStates];
-    let c = state.map((val) => {
+    //this handle the button name to change when click on dropdown menu button
+    setButtonHook({ ...buttonHook, sort: event })
+    //deep copy of state hook
+    const deepCopyTaskStates = JSON.parse(JSON.stringify(taskStates));
+
+    deepCopyTaskStates.map((val) => {
       return val.sort((a, b) => {
         return a.priority.localeCompare(b.priority)
       })
     })
-    setTaskStates([...state])
+    setTaskStates([...deepCopyTaskStates])
 
+  }
+
+  function AddTaskPopupHandleMessage(message) {
+    setOpen({ ...open, flag: true, message: message });
+    messageOff()
   }
   //<div className="col-sm-7 col-7 TaskBoard ">
   return (
     /*parent  div starts*/
     <div>
-      {addTaskPopupHook ? <AddTaskPopup flag={true} addTaskPopupOff={addTaskPopupOff} mainAddTask={mainAddTask} /> : null}
+      <Snackbar
+        open={open.flag}
+        message={open.message}
+      />
+      {addTaskPopupHook ? <AddTaskPopup AddTaskPopupHandleMessage={AddTaskPopupHandleMessage} flag={addTaskPopupHook} addTaskPopupOff={addTaskPopupOff} mainAddTask={mainAddTask} /> : null}
 
       <div className="container-fluid border border-secondary  parrent" style={{ height: "100vh" }}>
         <div className="row ">
-          <div className="col-xxl-12 col-sm-7 col-7 TaskBoard ">
+          <div className="col-xxl-12 col-md-12 col-sm-7 col-xl col-lg col-6 TaskBoard ">
             <h3>Task Board</h3>
           </div>
         </div>
         {/*child div starts*/}
         <div className="container  child mt-4" style={{ paddingLeft: "20px", marginleft: "50px", overflow: "auto" }}  >
           <div className="row pb-2 mt-3">
-            <div className="col-xxl-1 col-sm-3 col-12" >
-              <h4 >Filter By:</h4>
+            <div className="col-xxl-1  col-md-2 col-sm-2 col-2 " >
+              <h4 className='smdevice' >Filter By:</h4>
             </div >
-            <div className="col-xxl-1 col-sm-2 col " style={{ marginRight: "5%" }} >
+            <div className="col-xxl-1 col-md-2  col-sm-3 col-4 " style={{ marginRight: "5%" }} >
               {/* borderColor: "red", borderWidth: "2px"*/}
-              <Form.Control className={inputErrorHook.assignees === true ? "errorinputbox" : null} onChange={(event) => mainFilterTaskHandler(event, "assignees")} style={{ width: "120px", height: "30px", fontSize: "15px" }} size="sm" type="text" placeholder="Assignee Name" />
+              <Form.Control onChange={(event) => mainFilterTaskHandler(event, "assignees")} style={{ width: "120px", height: "30px", fontSize: "15px" }} className={styles.btninp} size="sm" type="text" placeholder="Assignee Name" />
             </div>
-            <div className="col-xxl-1 col-sm-2 col-" >
+            <div className="col-xxl-1 col-md col-sm-6 col-1 " >
               <DropdownButton
                 className={inputErrorHook.priority === true ? "errorinputbox" : null}
                 as={ButtonGroup}
-
-                drop="down-centered'"
                 variant="light"
-                title="Priority"
+                title={buttonHook.filter || "Priority"}
                 size="sm"
                 style={{
                   width: "120px", height: "30px"
@@ -157,7 +271,7 @@ function App() {
                 </div>
               </DropdownButton>
             </div>
-            <div className="col-xxl-3 col-sm-2 col d-flex justify-content-center " >
+            <div className="col-xxl-3 col-md-4 col-sm-11 col-6 d-flex justify-content-center " >
               <Button onClick={filterButtonToggleHook ? mainFilterTask : null} style={{ height: "30px", width: "60px" }} variant="dark" size="sm">
                 Filter
               </Button>
@@ -168,28 +282,30 @@ function App() {
               <Button onClick={mainSaveStateTask} style={{ height: "30px", width: "60px", marginLeft: "2%" }} variant="success" size="sm">
                 Save
               </Button>
+              <Button onClick={load} style={{ height: "30px", width: "60px", marginLeft: "2%" }} variant="info" size="sm">
+                load
+              </Button>
             </div>
 
 
-            <div className="col-xxl col-sm-3 col d-flex justify-content-end "  >
+            <div className="col-xxl col-md-8 col-sm-8 col d-flex justify-content-end "  >
               <Button style={{ marginRight: "10px", width: "180px" }} onClick={addTaskPopupOn} size="sm">
                 Add New Task
               </Button>
-
             </div>
           </div >
 
           <div className="row ">
-            <div className="col-xxl-1 col-sm-3 ">
-              <h4 >Sort by:</h4>
+            <div className="col-xxl-1 col-sm-2 col-2">
+              <h4 className="smdevice">Sort by:</h4>
             </div>
-            <div className="col-xxl col-sm-9 ">
+            <div className="col-xxl col-sm-9 col-1 ">
               <DropdownButton
                 as={ButtonGroup}
                 onSelect={mainSortTask}
                 drop="down-centered'"
                 variant="light"
-                title="Criteria"
+                title={buttonHook.sort || "Criteria"}
                 size="sm"
                 style={{
                   width: "120px",
@@ -197,7 +313,7 @@ function App() {
                 }}
               >
                 <div style={{ fontSize: "14px" }}>
-                  <Dropdown.Item eventKey={"P0"}>Priority</Dropdown.Item>
+                  <Dropdown.Item eventKey={"Priority"}>Priority</Dropdown.Item>
 
                 </div>
               </DropdownButton>
@@ -214,7 +330,9 @@ function App() {
                   <Card.Body >
                     {/*for making dv scrollable  it is actually linked with actual height of the card component*/}
                     <div style={{ maxHeight: "400px", overflow: 'auto' }}>
-                      <TaskController key={idx} rootIndex={idx} tasksArray={tasksArray} mainDeleteTask={mainDeleteTask} mainEditTask={mainEditTask} />
+                      {tasksArray.length !== 0 ? <TaskController key={idx} rootIndex={idx} tasksArray={tasksArray} mainDeleteTask={mainDeleteTask} mainEditTask={mainEditTask} /> :
+                        <Skeleton variant="rectangular" width={209} height={250} />
+                      }
                     </div>
                   </Card.Body>
                 </Card>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Task from './Task';
-
+import { MessageSharp } from '@material-ui/icons';
+//call by  main App component
 function TaskController(props) {
     const [tasksArrayHook, setTasksArrayHook] = useState([]);
 
@@ -8,15 +9,15 @@ function TaskController(props) {
         setTasksArrayHook(props.tasksArray)
     }, [props.tasksArray])
     //passing the updated object from task cotroller finally to app object contains status,rootindex,currentrootIndex(main states index)priority
-    function editTask(popupUpdateTaskHookObj, currentIndex) {
-        props.mainEditTask(popupUpdateTaskHookObj, currentIndex)
+    function editTask(ShCpypopUpUpdateTaskHookObj, currentIndex, message) {
+        props.mainEditTask(ShCpypopUpUpdateTaskHookObj, currentIndex, message)
     }
     //called by task along passing index of note to deleted as well as root index sendin it to app
-    function deletetasksArray(deletetasksArrayIndex) {
+    function deletetasksArray(deletetasksArrayIndex, message) {
         //updating direct hook lead to problems so shallow compy is created
-        const updatedTasksArray = [...tasksArrayHook];
-        updatedTasksArray.splice(deletetasksArrayIndex, 1);
-        props.mainDeleteTask(updatedTasksArray, props.rootIndex);
+        const ShcpyupdatedTasksArray = [...tasksArrayHook];
+        ShcpyupdatedTasksArray.splice(deletetasksArrayIndex, 1);
+        props.mainDeleteTask(ShcpyupdatedTasksArray, props.rootIndex, message);
     }
 
     return (

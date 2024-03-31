@@ -5,21 +5,22 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import EditTaskPopup from "./EditTaskPopup";
-import { SettingsEthernet } from "@material-ui/icons";
-
+import DeleteTaskPopup from './DeleteTaskPopup';
+//call by TaskController
 function Task(props) {
-    const [editTaskPopupHook, setEditTaskPopupHook] = useState(false)
+    const [editTaskPopupHook, setEditTaskPopupHook] = useState(false);
+    const [deleteTaskPopupHook, SetDeleteTaskPopupHook] = useState(false);
 
     //passing index of task that is going to be deleted to task controller which is a middle ware between app and task component
-    function handleDeleteTask() {
-        props.deletetasksArray(props.index)
+    function handleDeleteTask(message) {
+        // sending message along this
+        props.deletetasksArray(props.index, message)
     }
     //this function receives the updated unit Task object  from EditTaskPopup component object have rootIndex status and priority
     //sending the obect to the task controller
-    function editTask(popupUpdateTaskHookObj) {
-        //delay so that instant mapping is avoided this need to done because modal clossing animation disappear which look not good
+    function editTask(ShCpypopUpUpdateTaskHookObj, message) {
 
-        props.editTask(popupUpdateTaskHookObj, props.index);
+        props.editTask(ShCpypopUpUpdateTaskHookObj, props.index, message);
 
 
     }
@@ -35,39 +36,52 @@ function Task(props) {
         }, 500)
     }
 
+    function deleteTaskPopupOn() {
+        SetDeleteTaskPopupHook(true);
+    }
+    function deleteTaskPopupOff() {
+        setTimeout(() => {
+            SetDeleteTaskPopupHook(false)
+        }, 500)
+    }
+
     return (
         <div>{editTaskPopupHook ? <EditTaskPopup flag={editTaskPopupHook} editTask={editTask} editTaskPopupOff={editTaskPopupOff} task={props.task} currentRootIndex={props.currentRootIndex} /> : null}
+            {deleteTaskPopupHook ? <DeleteTaskPopup flag={deleteTaskPopupHook} deleteTaskPopupOff={deleteTaskPopupOff} task={props.task} handleDeleteTask={handleDeleteTask} /> : null}
             <div>
                 <Card style={{ textAlign: "justify", marginBottom: "6px", background: "#F3F1F2" }}>
                     <Card.Body>
-                        <div className='flexTaskController'> {/* Use a <div> instead of <h6> for Task 1 */}
+                        <div className='flexTaskController'>
                             <h6>{props.task.title}</h6>
-                            <button style={{ position: "relative", left: "115px", fontSize: "10px", height: "20px" }}>{props.task.priority}</button>
+                            <button style={{ fontSize: "10px", height: "20px", background: "#007bff", color: "#fff", borderColor: "#007bff" }}>{props.task.priority}</button>
                         </div>
 
                         <p style={{ fontSize: "10px" }}>
-                            {props.task.discription}
+                            {props.task.description}
                         </p>
-                        <div className="flexTaskController"> {/* Use a <div> instead of <h6> for @Pravin */}
-                            <h6>{props.task.assignees}</h6>
+                        <div className="flexTaskController">
+                            <h6 >{props.task.assignees}</h6>
 
 
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <p style={{ margin: "0", marginRight: "10px" }}>{props.task.status}</p>
+                            <p style={{ margin: "0", marginRight: "10px", paddingLeft: "20px", paddingRight: "20px", background: "#007bff", color: "#fff", fontSize: "15px", border: "1px solid #007bff", borderRadius: "2px" }}>{props.task.status}</p>
                             {/*<button style={{ fontSize: "10px", height: "20px" }}>men</button>*/}
                             <DropdownButton
                                 as={ButtonGroup}
-                                drop="down-centered'"
-                                variant="secondary"
+                                variant="primary"
                                 title=""
                                 size="sm"
                                 style={{
-                                    marginLeft: "5%"
+                                    marginLeft: "5%",
+
                                 }}
+
+
                             ><div style={{ fontSize: "14px" }}>
                                     <Dropdown.Item as="button" onClick={editTaskPopupOn} >edit</Dropdown.Item>
-                                    <Dropdown.Item as="button" onClick={handleDeleteTask} >delete</Dropdown.Item>
+                                    {/*handleDeleteTask itergrated with this buton*/}
+                                    <Dropdown.Item as="button" onClick={deleteTaskPopupOn} >delete</Dropdown.Item>
                                 </div>
                             </DropdownButton>
                         </div>
