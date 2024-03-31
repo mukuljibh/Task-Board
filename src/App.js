@@ -237,14 +237,17 @@ function App() {
       />
       {addTaskPopupHook ? <AddTaskPopup AddTaskPopupHandleMessage={AddTaskPopupHandleMessage} flag={addTaskPopupHook} addTaskPopupOff={addTaskPopupOff} mainAddTask={mainAddTask} /> : null}
 
-      <div className="container-fluid border border-secondary  parrent" style={{ height: "100vh" }}>
+      <div className="container-fluid border border-secondary  parrent" style={{ height: "100vh", overflowY: "auto" }}>
         <div className="row ">
           <div className="col-xxl-12 col-md-12 col-sm-7 col-xl col-lg col-6 TaskBoard ">
             <h3>Task Board</h3>
           </div>
         </div>
         {/*child div starts*/}
-        <div className="container  child mt-4" style={{ paddingLeft: "20px", marginleft: "50px", overflow: "auto" }}  >
+
+
+        <div className="container  child mt-4" style={{ paddingLeft: "20px", marginleft: "50px" }}  >
+
           <div className="row pb-2 mt-3">
             <div className="col-xxl-1  col-md-2 col-sm-2 col-2 " >
               <h4 className='smdevice' >Filter By:</h4>
@@ -342,8 +345,9 @@ function App() {
 
 
         </div>
-        {/*child div ends*/}
-      </div >
+      </div>
+      {/*child div ends*/}
+
       {/*parent div ends*/}
     </div >
   );

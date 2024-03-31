@@ -46,7 +46,7 @@ font-size: large;
   justify-content: space-between;
 }
 ::-webkit-scrollbar {
-  width: 4px; 
+  height: 8px; 
 }
 
 ::-webkit-scrollbar-track {
@@ -63,10 +63,8 @@ font-size: large;
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
-.btninp{
-  width:"300px" !important;
-  border-radius: 10px;
-}
+
+
 @media all and (max-width: 768px) {
   .TaskBoard{
     text-align:center;
