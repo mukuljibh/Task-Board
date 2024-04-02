@@ -50,8 +50,9 @@ function App() {
     let pendingStateIndex = 0;
     //creating deep copy so that states does not cause any unexpected issue
     const deepCopyTaskStates = JSON.parse(JSON.stringify(taskStates));
+    //as array is passed by reference changes to some part cause reflect changes in entire array
     let updatedState = [...deepCopyTaskStates[0], updatedPopupAddTaskHookObj];
-    deepCopyTaskStates[0].push(updatedPopupAddTaskHookObj)
+    deepCopyTaskStates[pendingStateIndex].push(updatedPopupAddTaskHookObj)
     setTaskStates([...deepCopyTaskStates])
   }
   //helper function to mainFilterTask
